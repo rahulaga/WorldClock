@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.irahul.worldclock"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="10" />
+
+    <!-- Clock image from http://openclipart.org/detail/12597/analog-clock-by-anonymous-12597 -->
+    <application
+        android:icon="@drawable/clock_48"
+        android:label="@string/app_name" >          
+                
+        <!-- Activity to show timezone list (ListActivity) -->
+        <activity
+            android:name=".WorldClockActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <!-- Activity to add/edit timezone -->
+        <activity android:name="TimeZoneEdit">            
+            
+            <!-- Edit -->
+            <intent-filter android:label="@string/title_timezone_edit">                
+                <action android:name="android.intent.action.EDIT" />
+                <category android:name="android.intent.category.DEFAULT" />                
+            </intent-filter>
+
+            <!-- Add -->
+            <intent-filter android:label="@string/title_timezone_add">
+                <action android:name="android.intent.action.INSERT" />
+                <category android:name="android.intent.category.DEFAULT" />                
+            </intent-filter>
+
+        </activity>
+    </application>
+
+    <!-- Permission to save selections -->
+    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
+</manifest>

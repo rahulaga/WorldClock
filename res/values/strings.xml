@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">World Clock</string>
+    <string name="menu_add">Add Zone</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Remove</string>
+    
+    <!-- Timezone Edit Activity -->
+    <string name="title_timezone_add">Add Time Zone</string>
+    <string name="title_timezone_edit">Edit Time Zone</string>
+    <string name="timezone_pick_zone">Pick a time zone</string>
+    <string name="timezone_pick_name">Custom name</string>
+    <string name="timezone_save">Save</string>
+    <string name="timezone_cancel">Cancel</string>
+
+</resources>

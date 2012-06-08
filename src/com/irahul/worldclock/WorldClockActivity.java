@@ -1,0 +1,161 @@
+package com.irahul.worldclock;
+
+import java.util.TimeZone;
+
+import android.app.ListActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+
+/**
+ * Activity to display selected zone. Note extending ListActivity class
+ * 
+ * @author rahul
+ * 
+ */
+public class WorldClockActivity extends ListActivity {	
+	private static final String TAG = WorldClockActivity.class.getName();
+	//
+	//Intent extras map keys
+	//IN - sent to edit dialog
+	//OUT - received in onActivityResult
+	//
+	public static final String INTENT_TZ_DISPLAYNAME_IN = "INTENT_TZ_DISPLAYNAME_IN";
+	public static final String INTENT_TZ_ID_IN = "INTENT_TZ_ID_IN";
+	public static final String INTENT_TZ_DISPLAYNAME_OUT = "INTENT_TZ_DISPLAYNAME_OUT";
+	public static final String INTENT_TZ_ID_OUT = "INTENT_TZ_ID_OUT";
+	//Request codes for intent 
+	private static final int REQ_CODE_ADD_ZONE = 0;
+	private static final int REQ_CODE_EDIT_ZONE = 1;
+		
+	private WorldClockData data;
+	private TimeZoneListAdapter adapter;
+
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		data = new WorldClockData(getApplicationContext());
+		
+		int listSize = refreshListView();
+			
+		// register to get context event to edit/delete
+		registerForContextMenu(getListView());
+		
+		//if no data exists then prompt to add
+		if(listSize==0){
+			startActivityForResult(new Intent(Intent.ACTION_INSERT), REQ_CODE_ADD_ZONE);
+		}
+	}
+
+	/**
+	 * Context menu to allow edit/delete of timezone
+	 */
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_timezone_edit, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
+				.getMenuInfo();
+		WorldClockTimeZone selectedTimeZone = (WorldClockTimeZone) getListAdapter()
+				.getItem(info.position);
+
+		switch (item.getItemId()) {
+		case R.id.menu_edit:
+			// edit
+			Intent editIntent = new Intent(Intent.ACTION_EDIT);
+			editIntent.putExtra(INTENT_TZ_ID_IN, selectedTimeZone.getId());
+			editIntent.putExtra(INTENT_TZ_DISPLAYNAME_IN, selectedTimeZone.getDisplayName());						
+			startActivityForResult(editIntent, REQ_CODE_EDIT_ZONE);
+			return true;
+		case R.id.menu_delete:
+			// delete
+			data.deleteZone(selectedTimeZone);
+			refreshListView();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent intentReceived) {
+		Log.d(TAG, "activity requestcode="+requestCode+" resultCode="+resultCode+ "data="+intentReceived);
+		//process response from add/edit activity
+		if(resultCode==RESULT_OK){
+			switch(requestCode){
+			case REQ_CODE_ADD_ZONE:
+				Log.d(TAG, "Add zone id"+intentReceived.getStringExtra(INTENT_TZ_ID_OUT)+ " name="+intentReceived.getStringExtra(INTENT_TZ_DISPLAYNAME_OUT));
+				data.addZone(new WorldClockTimeZone(TimeZone.getTimeZone(intentReceived.getStringExtra(INTENT_TZ_ID_OUT)),intentReceived.getStringExtra(INTENT_TZ_DISPLAYNAME_OUT)));
+				break;
+			case REQ_CODE_EDIT_ZONE:
+				Log.d(TAG, "EDIT - Remove zone id"+intentReceived.getStringExtra(INTENT_TZ_ID_IN)+ " name="+intentReceived.getStringExtra(INTENT_TZ_DISPLAYNAME_IN));
+				Log.d(TAG, "EDIT - Add zone id"+intentReceived.getStringExtra(INTENT_TZ_ID_OUT)+ " name="+intentReceived.getStringExtra(INTENT_TZ_DISPLAYNAME_OUT));
+				data.deleteZone(new WorldClockTimeZone(TimeZone.getTimeZone(intentReceived.getStringExtra(INTENT_TZ_ID_IN))));
+				data.addZone(new WorldClockTimeZone(TimeZone.getTimeZone(intentReceived.getStringExtra(INTENT_TZ_ID_OUT)),intentReceived.getStringExtra(INTENT_TZ_DISPLAYNAME_OUT)));				
+				break;
+			default:
+				throw new WorldClockException("Unsupported request code!");
+			}
+		}
+		
+		//refresh data 
+		refreshListView();		
+		super.onActivityResult(requestCode, resultCode, intentReceived);
+	}
+
+	/**
+	 * Present options menu to add timezones
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+	/**
+	 * Handle menu item selects
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_add:
+			// add a new zone
+			startActivityForResult(new Intent(Intent.ACTION_INSERT), REQ_CODE_ADD_ZONE);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	/**
+	 * Refresh list of timezones
+	 * @return number of items in list after refresh
+	 */
+	private int refreshListView() {
+		WorldClockTimeZone[] values = data.getSavedTimeZones().toArray(
+				new WorldClockTimeZone[] {});
+
+		Log.d(TAG, "Loaded data size for refresh:" + values.length);
+
+		adapter = new TimeZoneListAdapter(
+				this, R.layout.list_itemview, R.id.list_display_label, values);
+		setListAdapter(adapter);
+		adapter.notifyDataSetChanged();		
+		return values.length;
+	}
+}

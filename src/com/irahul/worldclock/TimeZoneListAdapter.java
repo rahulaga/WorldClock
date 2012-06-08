@@ -1,0 +1,50 @@
+package com.irahul.worldclock;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+/**
+ * Custom view for list
+ * 
+ * Note: get view method renders each row in list
+ * @author rahul
+ *
+ */
+public class TimeZoneListAdapter extends ArrayAdapter<WorldClockTimeZone> {	
+	private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("hh:mm a");
+	private WorldClockTimeZone[] displayTimeZones;
+	
+	public TimeZoneListAdapter(Context context, int resource,
+			int textViewResourceId, WorldClockTimeZone[] tzValues) {
+		super(context, resource, textViewResourceId, tzValues);
+		
+		this.displayTimeZones=tzValues;
+	}
+
+	
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {		
+		if(convertView==null){
+			LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			convertView = li.inflate(R.layout.list_itemview, null);
+		}
+		
+		WorldClockTimeZone tz = displayTimeZones[position];			
+		TextView time = (TextView)convertView.findViewById(R.id.list_time_label);		
+		DATE_FORMAT.setTimeZone(tz.getTimeZone());
+		time.setText(DATE_FORMAT.format(new Date()));
+		
+		TextView displayName = (TextView)convertView.findViewById(R.id.list_display_label);
+		displayName.setText(tz.getDisplayName());
+		
+		return convertView;
+	}
+	
+}
