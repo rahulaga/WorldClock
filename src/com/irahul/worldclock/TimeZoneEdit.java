@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2012 iRahul.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.irahul.worldclock;
 
 import java.util.TimeZone;
@@ -48,7 +63,7 @@ public class TimeZoneEdit extends Activity {
 
 			// editing zone info
 			Log.d(TAG, "EDIT tz="+ intent.getStringExtra(WorldClockActivity.INTENT_TZ_ID_IN));
-			Log.d(TAG,"EDTI display="+ intent.getStringExtra(WorldClockActivity.INTENT_TZ_DISPLAYNAME_IN));
+			Log.d(TAG, "EDTI display="+ intent.getStringExtra(WorldClockActivity.INTENT_TZ_DISPLAYNAME_IN));
 
 			// pre-select in spinner
 			spinner.setSelection(getPositionForZone(intent
@@ -93,10 +108,8 @@ public class TimeZoneEdit extends Activity {
 
 				EditText displayName = (EditText) findViewById(R.id.timezone_edit_displayname);
 
-				intent.putExtra(WorldClockActivity.INTENT_TZ_ID_OUT,
-						selectedZone.getId());
-				intent.putExtra(WorldClockActivity.INTENT_TZ_DISPLAYNAME_OUT,
-						displayName.getText().toString());
+				intent.putExtra(WorldClockActivity.INTENT_TZ_ID_OUT, selectedZone.getId());
+				intent.putExtra(WorldClockActivity.INTENT_TZ_DISPLAYNAME_OUT, displayName.getText().toString());
 				setResult(RESULT_OK, intent);
 
 				finish();

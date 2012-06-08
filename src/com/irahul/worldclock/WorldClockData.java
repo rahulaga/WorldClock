@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2012 iRahul.com
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.irahul.worldclock;
 
 import java.io.FileInputStream;
@@ -35,8 +50,6 @@ public class WorldClockData {
 
 		// load timezones if not available
 		if (this.selectedTimeZones == null) {
-			Log.d(TAG, "Loading saved data from file");
-
 			try {
 				FileInputStream fis = context.openFileInput(FILENAME);
 				StringBuilder fileData = new StringBuilder();
@@ -87,38 +100,32 @@ public class WorldClockData {
 	 */
 	private void createFile() {
 		Log.d(TAG, "Creating new file");
-
-		try {
-			FileOutputStream fos = context.openFileOutput(FILENAME,
-					Context.MODE_PRIVATE);
-			OutputStreamWriter osw = new OutputStreamWriter(fos);
-
-			// write empty array into file
-			osw.write(new JSONArray().toString());
-
-			osw.flush();
-			osw.close();
-			fos.close();
-		} catch (FileNotFoundException e) {
-			throw new WorldClockException(e);
-		} catch (IOException e) {
-			throw new WorldClockException(e);
-		}
+		
+		// write empty array into file
+		writeToFile(new JSONArray().toString());
 	}
 
 	/**
 	 * Writes set to file (assume not null)
 	 */
-	private void updateFile() {
+	private void updateFile() {		
+		try {
+			JSONArray arr = serialize();
+			writeToFile(arr.toString());
+			
+		} catch (JSONException e) {
+			throw new WorldClockException(e);
+		}
+	}
+	
+	private void writeToFile(String jsonString) {
+		Log.d(TAG, "Writing JSON to file: " + jsonString);
 		try {
 			FileOutputStream fos = context.openFileOutput(FILENAME,
 					Context.MODE_PRIVATE);
 			OutputStreamWriter osw = new OutputStreamWriter(fos);
 
-			JSONArray arr = serialize();
-			Log.d(TAG, "Writing to file" + arr.toString());
-
-			osw.write(arr.toString());
+			osw.write(jsonString);
 			osw.flush();
 			osw.close();
 			fos.close();
@@ -126,8 +133,6 @@ public class WorldClockData {
 		} catch (FileNotFoundException e) {
 			throw new WorldClockException(e);
 		} catch (IOException e) {
-			throw new WorldClockException(e);
-		} catch (JSONException e) {
 			throw new WorldClockException(e);
 		}
 	}
