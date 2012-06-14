@@ -17,7 +17,7 @@ package com.irahul.worldclock;
 
 import java.util.TimeZone;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,15 +27,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
 
 /**
- * Activity to display selected zones. Note extending ListActivity class
+ * Main world clock activity
  * 
  * @author rahul
  * 
  */
-public class WorldClockActivity extends ListActivity {	
+public class WorldClockActivity extends Activity {	
 	private static final String TAG = WorldClockActivity.class.getName();
 	//
 	//Intent extras map keys
@@ -58,12 +61,23 @@ public class WorldClockActivity extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		data = new WorldClockData(getApplicationContext());
+		setContentView(R.layout.worldclock_main);
 		
+		//init data
+		data = new WorldClockData(getApplicationContext());						
 		int listSize = refreshListView();
-			
+		
 		// register to get context event to edit/delete
-		registerForContextMenu(getListView());
+		ListView mainListView = (ListView)findViewById(R.id.main_list_view);
+		registerForContextMenu(mainListView);	
+		
+		Button mainAddButton = (Button)findViewById(R.id.main_button_add);
+		mainAddButton.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				invokeAddZoneActivity();
+			}			
+		});
 		
 		//if no data exists then prompt to add
 		if(listSize==0){
@@ -86,8 +100,9 @@ public class WorldClockActivity extends ListActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item
 				.getMenuInfo();
-		WorldClockTimeZone selectedTimeZone = (WorldClockTimeZone) getListAdapter()
-				.getItem(info.position);
+		
+		ListView mainListView = (ListView)findViewById(R.id.main_list_view);		
+		WorldClockTimeZone selectedTimeZone = (WorldClockTimeZone) mainListView.getAdapter().getItem(info.position);
 
 		switch (item.getItemId()) {
 		case R.id.menu_edit:
@@ -151,11 +166,15 @@ public class WorldClockActivity extends ListActivity {
 		switch (item.getItemId()) {
 		case R.id.menu_add:
 			// add a new zone
-			startActivityForResult(new Intent(Intent.ACTION_INSERT), REQ_CODE_ADD_ZONE);
+			invokeAddZoneActivity();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+	
+	private void invokeAddZoneActivity() {
+		startActivityForResult(new Intent(Intent.ACTION_INSERT), REQ_CODE_ADD_ZONE);
 	}
 	
 	/**
@@ -170,7 +189,9 @@ public class WorldClockActivity extends ListActivity {
 
 		adapter = new TimeZoneListAdapter(
 				this, R.layout.list_itemview, R.id.list_display_label, values);
-		setListAdapter(adapter);
+		
+		ListView mainListView = (ListView)findViewById(R.id.main_list_view);
+		mainListView.setAdapter(adapter);
 		adapter.notifyDataSetChanged();		
 		return values.length;
 	}
