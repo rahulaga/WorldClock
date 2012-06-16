@@ -15,25 +15,24 @@
   limitations under the License.
 -->
 
-<!-- Main activity -->
+<!-- Dialog box with listview and text search box -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"    
-    android:orientation="vertical" 
-    android:gravity="center">
-
-    <Button
-        android:id="@+id/main_button_add"
-        android:layout_width="wrap_content"
+    android:orientation="vertical" >
+    
+    <EditText
+        android:id="@+id/dialog_filter_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/menu_add"
-        android:text="@string/menu_add" />
+        android:hint="@string/timezone_search_filter" >
+
+    </EditText>    
 
     <ListView
-        android:id="@+id/main_list_view"
+        android:id="@+id/dialog_list_view"
         android:layout_width="match_parent"
         android:layout_height="fill_parent" >
-
     </ListView>
 
 </LinearLayout>

@@ -22,6 +22,10 @@ import java.util.TimeZone;
  *
  */
 public class WorldClockTimeZone {
+	private static final int _60 = 60;
+	private static final int _60000 = 60000;
+	private static final int _3600000 = 3600000;
+	private static final String OFFSET_FORMAT = "%s %02d:%02d";
 	private TimeZone timeZone;
 	private String displayName;
 	
@@ -36,7 +40,7 @@ public class WorldClockTimeZone {
 
 
 	@Override
-	public String toString() {		
+	public String toString() {
 		return this.timeZone.getID()+" ("+this.getDisplayName()+")";
 	}
 
@@ -68,5 +72,10 @@ public class WorldClockTimeZone {
 	@Override
 	public int hashCode() {
 		return this.getId().hashCode();
+	}
+
+	public String getRawOffsetDisplay() {
+		int offset = this.timeZone.getRawOffset();
+		return String.format(OFFSET_FORMAT, offset >= 0 ? "+" : "-", Math.abs(offset / _3600000), Math.abs((offset / _60000) % _60));		
 	}
 }

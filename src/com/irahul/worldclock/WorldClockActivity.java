@@ -187,8 +187,7 @@ public class WorldClockActivity extends Activity {
 
 		Log.d(TAG, "Loaded data size for refresh:" + values.length);
 
-		adapter = new TimeZoneListAdapter(
-				this, R.layout.list_itemview, R.id.list_display_label, values);
+		adapter = new TimeZoneListAdapter(this, values);
 		
 		ListView mainListView = (ListView)findViewById(R.id.main_list_view);
 		mainListView.setAdapter(adapter);

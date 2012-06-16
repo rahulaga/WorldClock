@@ -13,5 +13,6 @@
     <string name="timezone_pick_name">Custom name</string>
     <string name="timezone_save">Save</string>
     <string name="timezone_cancel">Cancel</string>
+    <string name="timezone_search_filter">Type name to search...</string>
 
 </resources>

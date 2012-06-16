@@ -15,19 +15,27 @@
  */
 package com.irahul.worldclock;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimeZone;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -39,6 +47,7 @@ import android.widget.TextView;
  */
 public class TimeZoneEdit extends Activity {
 	private static final String TAG = TimeZoneEdit.class.getName();
+	private static final int DIALOG_TIMEZONE_LIST = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +61,18 @@ public class TimeZoneEdit extends Activity {
 
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
+		
+		//button that brings up dialog with timezone list
+		Button buttonTimeZoneList = (Button)findViewById(R.id.button_timezone_edit_list);
+		buttonTimeZoneList.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				showDialog(DIALOG_TIMEZONE_LIST);
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 
 		// pick mode - add or edit
 		final Intent intent = getIntent();
@@ -125,12 +146,77 @@ public class TimeZoneEdit extends Activity {
 		});
 
 	}
+	
+	@Override
+	protected void onPrepareDialog(int id, Dialog dialog) {
+		// TODO Auto-generated method stub
+		super.onPrepareDialog(id, dialog);
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int dialogId) {
+		Dialog dialog;
+	    switch(dialogId) {
+	    case DIALOG_TIMEZONE_LIST:
+	    	dialog = new Dialog(this);
+
+			dialog.setContentView(R.layout.timezone_edit_dialog_list);
+			dialog.setTitle(R.string.timezone_pick_zone);
+			dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+			
+			//setup list with timezone and enable filtering
+			ListView dialogList = (ListView)dialog.findViewById(R.id.dialog_list_view);
+			final ArrayAdapter<WorldClockTimeZone> adapter = new TimeZoneEditDialogListAdapter(this, getTimeZones());			
+			dialogList.setAdapter(adapter);			
+			dialogList.setTextFilterEnabled(true);
+			dialogList.setFastScrollEnabled(true);
+			dialogList.setOnItemClickListener(new OnItemClickListener() {
+
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+					Log.d(TAG, "clicked item");
+					// TODO Auto-generated method stub
+					
+				}
+			});
+		    
+			EditText filterText = (EditText) dialog.findViewById(R.id.dialog_filter_text);
+		    filterText.addTextChangedListener(new TextWatcher() {
+				
+				public void onTextChanged(CharSequence s, int start, int before, int count) {
+					
+					// TODO Auto-generated method stub
+					
+				}
+				
+				public void beforeTextChanged(CharSequence s, int start, int count,
+						int after) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				public void afterTextChanged(Editable s) {
+					adapter.getFilter().filter(s);
+					adapter.notifyDataSetChanged();
+					// TODO Auto-generated method stub
+					
+				}
+			});
+
+			//ImageView image = (ImageView) dialog.findViewById(R.id.image);
+			//image.setImageResource(R.drawable.android);
+	        // do the work to define the pause Dialog
+	        break;	    
+	    default:
+	        throw new WorldClockException("Unknown dialog -should never happen");
+	    }
+	    return dialog;
+	}
 
 	private int getPositionForZone(String timeZoneId) {
-		WorldClockTimeZone[] allZones = getTimeZones();
+		List<WorldClockTimeZone> allZones = getTimeZones();
 
-		for (int i = 0; i < allZones.length; i++) {
-			if (allZones[i].getId().equals(timeZoneId))
+		for (int i = 0; i < allZones.size(); i++) {
+			if (allZones.get(i).getId().equals(timeZoneId))
 				return i;
 		}
 
@@ -138,15 +224,13 @@ public class TimeZoneEdit extends Activity {
 		return 0;
 	}
 
-	private WorldClockTimeZone[] getTimeZones() {
+	private List<WorldClockTimeZone> getTimeZones() {
 		String[] timezoneIds = TimeZone.getAvailableIDs();
-
-		WorldClockTimeZone[] tzArray = new WorldClockTimeZone[timezoneIds.length];
-		int count = 0;
+		List<WorldClockTimeZone> tzList = new ArrayList<WorldClockTimeZone>(timezoneIds.length);
 		for (String id : timezoneIds) {
-			tzArray[count++] = new WorldClockTimeZone(TimeZone.getTimeZone(id));
+			tzList.add(new WorldClockTimeZone(TimeZone.getTimeZone(id)));
 		}
 
-		return tzArray;
+		return tzList;
 	}
 }

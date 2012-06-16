@@ -15,19 +15,18 @@
   limitations under the License.
 -->
 
-<!-- List view itemm on main activity (shows list of selected timezones) -->
+<!-- List view item in dialog -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
     android:padding="6dp" >
 
     <ImageView
-        android:id="@+id/list_icon"
+        android:id="@+id/dialog_list_icon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:src="@drawable/clock_icon" >
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp">
     </ImageView>
 
     <LinearLayout
@@ -37,7 +36,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/list_display_label"
+            android:id="@+id/dialog_list_display_label"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
@@ -46,7 +45,7 @@
         </TextView>
         
         <TextView
-            android:id="@+id/list_time_label"
+            android:id="@+id/dialog_list_offset_label"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"

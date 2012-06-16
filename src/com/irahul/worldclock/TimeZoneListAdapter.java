@@ -32,13 +32,12 @@ import android.widget.TextView;
  *
  */
 public class TimeZoneListAdapter extends ArrayAdapter<WorldClockTimeZone> {	
+	//TODO - externalize into preferences in the future
 	private SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEEE hh:mm a");
 	private WorldClockTimeZone[] displayTimeZones;
 	
-	public TimeZoneListAdapter(Context context, int resource,
-			int textViewResourceId, WorldClockTimeZone[] tzValues) {
-		super(context, resource, textViewResourceId, tzValues);
-		
+	public TimeZoneListAdapter(Context context, WorldClockTimeZone[] tzValues) {
+		super(context, R.layout.list_itemview, R.id.list_display_label, tzValues);		
 		this.displayTimeZones=tzValues;
 	}
 	

@@ -14,6 +14,9 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
+
+<!-- Timezone ADD/EDIT activity -->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -25,17 +28,19 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <TextView
+    <Button
+        android:id="@+id/button_timezone_edit_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="@string/timezone_pick_zone" />
-
+    
     <Spinner
         android:id="@+id/timezone_edit_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1" 
+        android:prompt="@string/timezone_pick_zone"/>
 
     <TextView
         android:layout_width="match_parent"

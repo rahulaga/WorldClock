@@ -90,6 +90,8 @@ public class WorldClockData {
 	public void addZone(WorldClockTimeZone wcTimeZone) {
 		Log.d(TAG, "Adding zone: " + wcTimeZone);
 		
+		//TODO - what to do if someone attempts to add same zone with a diff name?
+		
 		selectedTimeZones.add(wcTimeZone);
 
 		updateFile();
