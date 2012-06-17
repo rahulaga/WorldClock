@@ -153,6 +153,11 @@ public class TimeZoneEdit extends Activity {
 		super.onPrepareDialog(id, dialog);
 	}
 	
+	private void dialogItemSelected(WorldClockTimeZone selectedItem){
+		//update display to selected value
+		System.out.println("dialog closed"+selectedItem);
+	}
+	
 	@Override
 	protected Dialog onCreateDialog(int dialogId) {
 		Dialog dialog;
@@ -170,41 +175,41 @@ public class TimeZoneEdit extends Activity {
 			dialogList.setAdapter(adapter);			
 			dialogList.setTextFilterEnabled(true);
 			dialogList.setFastScrollEnabled(true);
-			dialogList.setOnItemClickListener(new OnItemClickListener() {
-
-				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-					Log.d(TAG, "clicked item");
+			dialogList.setOnItemClickListener(new OnItemClickListener() {			
+				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {										
+					ListView listView = (ListView)parent;
+					TimeZoneEditDialogListAdapter adapter = (TimeZoneEditDialogListAdapter)listView.getAdapter();
+					WorldClockTimeZone selectedItem = adapter.getItem(position);
+					
+					Log.d(TAG, "clicked item"+selectedItem);
+					dialogItemSelected(selectedItem);
+					dismissDialog(DIALOG_TIMEZONE_LIST);
+					
 					// TODO Auto-generated method stub
 					
 				}
 			});
 		    
+			//Search box that is hooked up to the list
 			EditText filterText = (EditText) dialog.findViewById(R.id.dialog_filter_text);
-		    filterText.addTextChangedListener(new TextWatcher() {
-				
+		    filterText.addTextChangedListener(new TextWatcher() {				
 				public void onTextChanged(CharSequence s, int start, int before, int count) {
-					
-					// TODO Auto-generated method stub
-					
+					//do nothing					
 				}
 				
 				public void beforeTextChanged(CharSequence s, int start, int count,
 						int after) {
-					// TODO Auto-generated method stub
+					//do nothing
 					
 				}
 				
 				public void afterTextChanged(Editable s) {
+					//update adapter data -see Filter implementation
 					adapter.getFilter().filter(s);
-					adapter.notifyDataSetChanged();
-					// TODO Auto-generated method stub
-					
+					adapter.notifyDataSetChanged();					
 				}
 			});
-
-			//ImageView image = (ImageView) dialog.findViewById(R.id.image);
-			//image.setImageResource(R.drawable.android);
-	        // do the work to define the pause Dialog
+		    
 	        break;	    
 	    default:
 	        throw new WorldClockException("Unknown dialog -should never happen");

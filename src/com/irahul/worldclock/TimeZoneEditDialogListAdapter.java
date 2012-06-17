@@ -35,11 +35,11 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 	public TimeZoneEditDialogListAdapter(Context context, List<WorldClockTimeZone> tzValues) {
 		super(context, R.layout.timezone_edit_dialog_list, R.id.dialog_list_display_label, tzValues);
 
-		this.originalDataValues = new ArrayList<WorldClockTimeZone>();
-		this.originalDataValues.addAll(tzValues);
+		//original values
+		this.originalDataValues = new ArrayList<WorldClockTimeZone>(tzValues);
 		
-		this.filteredDataValues = new ArrayList<WorldClockTimeZone>();
-		this.filteredDataValues.addAll(tzValues);
+		//filtered values - this is what is used in display
+		this.filteredDataValues = new ArrayList<WorldClockTimeZone>(tzValues);
 	}
 
 	@Override
@@ -80,28 +80,36 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 		return filter;
 	}
 
+	/**
+	 * Implement filtering on list for searchText
+	 * Based on original source code from:
+	 * https://github.com/android/platform_frameworks_base/blob/master/core/java/android/widget/ArrayAdapter.java#L449
+	 * http://software-workshop.eu/content/android-development-creating-custom-filter-listview
+	 * @author rahul
+	 *
+	 */
 	private class TimeZoneFilter extends Filter {
+		/**
+		 * Based on the searchText provided the adapter's data is updated
+		 * Using {@link WorldClockTimeZone#getSearchString()} that 'contains' the searchText
+		 */
 		@Override
-		protected FilterResults performFiltering(CharSequence prefix) {
+		protected FilterResults performFiltering(CharSequence searchText) {
 			FilterResults results = new FilterResults();
 			
-			if (prefix == null || prefix.length() == 0) {				
+			if (searchText == null || searchText.length() == 0) {
+				//no search text provided
 				List<WorldClockTimeZone> list = new ArrayList<WorldClockTimeZone>(originalDataValues);	                
 	            results.values = list;
 	            results.count = list.size();				
 			} else {
-				String prefixString = prefix.toString().toLowerCase();
-				List<WorldClockTimeZone> values = new ArrayList<WorldClockTimeZone>(originalDataValues);				
-				final int count = values.size();
+				String searchStringLower = searchText.toString().toLowerCase();
+				List<WorldClockTimeZone> fullSearchList = new ArrayList<WorldClockTimeZone>(originalDataValues);				
 				final List<WorldClockTimeZone> newValues = new ArrayList<WorldClockTimeZone>();
 
-				for (int i = 0; i < count; i++) {
-					final WorldClockTimeZone value = values.get(i);
-					final String valueText = value.toString().toLowerCase();
-
-					// First match against the whole, non-splitted value
-					if (valueText.contains(prefixString)) {
-						newValues.add(value);
+				for (WorldClockTimeZone tz:fullSearchList) {			
+					if (tz.getSearchString().contains(searchStringLower)) {
+						newValues.add(tz);
 					}
 				}
 
@@ -112,6 +120,10 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 			return results;
 		}
 
+		/**
+		 * Called with the filtered results. These must then be updated in the adapter and notified for change
+		 */
+		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			filteredDataValues = (List<WorldClockTimeZone>) results.values;

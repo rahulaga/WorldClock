@@ -74,8 +74,20 @@ public class WorldClockTimeZone {
 		return this.getId().hashCode();
 	}
 
+	/**
+	 * The raw offset covert to a nice string. Eg: + 05:00 
+	 * @return
+	 */
 	public String getRawOffsetDisplay() {
 		int offset = this.timeZone.getRawOffset();
 		return String.format(OFFSET_FORMAT, offset >= 0 ? "+" : "-", Math.abs(offset / _3600000), Math.abs((offset / _60000) % _60));		
+	}
+
+	/**
+	 * The string that is searched in the add dialog box (using ID + display name) - and lowercased
+	 * @return
+	 */
+	public String getSearchString() {
+		return new StringBuilder(this.timeZone.getID()).append(" ").append(this.getDisplayName()).toString().toLowerCase();
 	}
 }
