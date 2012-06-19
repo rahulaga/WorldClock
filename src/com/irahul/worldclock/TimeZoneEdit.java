@@ -20,12 +20,15 @@ import java.util.List;
 import java.util.TimeZone;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -48,6 +51,8 @@ import android.widget.TextView;
 public class TimeZoneEdit extends Activity {
 	private static final String TAG = TimeZoneEdit.class.getName();
 	private static final int DIALOG_TIMEZONE_LIST = 0;
+	
+	private WorldClockTimeZone selectedTimeZone = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -155,22 +160,20 @@ public class TimeZoneEdit extends Activity {
 	
 	private void dialogItemSelected(WorldClockTimeZone selectedItem){
 		//update display to selected value
+		this.selectedTimeZone=selectedItem;
 		System.out.println("dialog closed"+selectedItem);
 	}
 	
 	@Override
 	protected Dialog onCreateDialog(int dialogId) {
-		Dialog dialog;
+		AlertDialog dialog;
 	    switch(dialogId) {
 	    case DIALOG_TIMEZONE_LIST:
-	    	dialog = new Dialog(this);
-
-			dialog.setContentView(R.layout.timezone_edit_dialog_list);
-			dialog.setTitle(R.string.timezone_pick_zone);
-			dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
+	    	LayoutInflater li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	    	View dialogView = li.inflate(R.layout.timezone_edit_dialog_list, null);	    		    	
 			
 			//setup list with timezone and enable filtering
-			ListView dialogList = (ListView)dialog.findViewById(R.id.dialog_list_view);
+			ListView dialogList = (ListView)dialogView.findViewById(R.id.dialog_list_view);
 			final ArrayAdapter<WorldClockTimeZone> adapter = new TimeZoneEditDialogListAdapter(this, getTimeZones());			
 			dialogList.setAdapter(adapter);			
 			dialogList.setTextFilterEnabled(true);
@@ -179,9 +182,7 @@ public class TimeZoneEdit extends Activity {
 				public void onItemClick(AdapterView<?> parent, View view, int position, long id) {										
 					ListView listView = (ListView)parent;
 					TimeZoneEditDialogListAdapter adapter = (TimeZoneEditDialogListAdapter)listView.getAdapter();
-					WorldClockTimeZone selectedItem = adapter.getItem(position);
-					
-					Log.d(TAG, "clicked item"+selectedItem);
+					WorldClockTimeZone selectedItem = adapter.getItem(position);					
 					dialogItemSelected(selectedItem);
 					dismissDialog(DIALOG_TIMEZONE_LIST);
 					
@@ -191,7 +192,7 @@ public class TimeZoneEdit extends Activity {
 			});
 		    
 			//Search box that is hooked up to the list
-			EditText filterText = (EditText) dialog.findViewById(R.id.dialog_filter_text);
+			EditText filterText = (EditText) dialogView.findViewById(R.id.dialog_filter_text);
 		    filterText.addTextChangedListener(new TextWatcher() {				
 				public void onTextChanged(CharSequence s, int start, int before, int count) {
 					//do nothing					
@@ -209,6 +210,10 @@ public class TimeZoneEdit extends Activity {
 					adapter.notifyDataSetChanged();					
 				}
 			});
+		    
+		    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	    	builder.setView(dialogView);
+	    	dialog = builder.create();
 		    
 	        break;	    
 	    default:
