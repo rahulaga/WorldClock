@@ -19,7 +19,10 @@
         
     <item android:id="@+id/menu_add"
           android:icon="@drawable/menu_add"
-          android:alphabeticShortcut='a'
           android:title="@string/menu_add" />
+    
+    <item android:id="@+id/menu_about"
+          android:icon="@drawable/ic_menu_info_details"
+          android:title="@string/menu_about" />
     
 </menu>

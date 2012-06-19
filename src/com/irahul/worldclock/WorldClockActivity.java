@@ -168,6 +168,9 @@ public class WorldClockActivity extends Activity {
 			// add a new zone
 			invokeAddZoneActivity();
 			return true;
+		case R.id.menu_about:
+			//about menu
+			//TODO
 		default:
 			return super.onOptionsItemSelected(item);
 		}
