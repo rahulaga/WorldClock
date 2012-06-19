@@ -27,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
-
     <Button
         android:id="@+id/button_timezone_edit_list"
         android:layout_width="match_parent"
@@ -37,13 +36,6 @@
         android:gravity="center_vertical|left"
         android:text="@string/timezone_pick_zone" />
     
-    <Spinner
-        android:id="@+id/timezone_edit_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" 
-        android:prompt="@string/timezone_pick_zone"/>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

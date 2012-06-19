@@ -31,16 +31,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * Activity to add a timezone or edit an existing one
@@ -58,23 +56,13 @@ public class TimeZoneEdit extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.timezone_edit);
-
-		// setup spinner
-		Spinner spinner = (Spinner) findViewById(R.id.timezone_edit_spinner);
-		ArrayAdapter<WorldClockTimeZone> adapter = new ArrayAdapter<WorldClockTimeZone>(
-				this, android.R.layout.simple_spinner_item, getTimeZones());
-
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		spinner.setAdapter(adapter);
 		
 		//button that brings up dialog with timezone list
 		Button buttonTimeZoneList = (Button)findViewById(R.id.button_timezone_edit_list);
 		buttonTimeZoneList.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				showDialog(DIALOG_TIMEZONE_LIST);
-				// TODO Auto-generated method stub
-				
+				showDialog(DIALOG_TIMEZONE_LIST);				
 			}
 		});
 		
@@ -90,10 +78,10 @@ public class TimeZoneEdit extends Activity {
 			// editing zone info
 			Log.d(TAG, "EDIT tz="+ intent.getStringExtra(WorldClockActivity.INTENT_TZ_ID_IN));
 			Log.d(TAG, "EDTI display="+ intent.getStringExtra(WorldClockActivity.INTENT_TZ_DISPLAYNAME_IN));
-
-			// pre-select in spinner
-			spinner.setSelection(getPositionForZone(intent
-					.getStringExtra(WorldClockActivity.INTENT_TZ_ID_IN)));
+			
+			//pre-select timezone
+			this.selectedTimeZone = new WorldClockTimeZone(TimeZone.getTimeZone(intent.getStringExtra(WorldClockActivity.INTENT_TZ_ID_IN)));
+			buttonTimeZoneList.setText(this.selectedTimeZone.toString());			
 
 			// pre-select displayname
 			EditText displayName = (EditText) findViewById(R.id.timezone_edit_displayname);
@@ -102,46 +90,33 @@ public class TimeZoneEdit extends Activity {
 		} else if (Intent.ACTION_INSERT.equals(action)) {
 			TextView title = (TextView) findViewById(R.id.timezone_edit_title);
 			title.setText(getString(R.string.title_timezone_add));
-			
-			//spinner select action - update default display name
-			//on edit intent we don't update custom display name
-			spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-				public void onItemSelected(AdapterView<?> parent, View view,
-						int pos, long id) {				
-					// pre-populate display name box with default
-					WorldClockTimeZone selectedItem = (WorldClockTimeZone) parent.getItemAtPosition(pos);
-					EditText displayName = (EditText) findViewById(R.id.timezone_edit_displayname);
-					displayName.setText(selectedItem.getDisplayName());
-				}
-
-				public void onNothingSelected(AdapterView<?> arg0) {
-					// do nothing
-				}
-			});
-
+			//bring up timezone select dialog on start
+			showDialog(DIALOG_TIMEZONE_LIST);
 		} else {
 			// unrecognized action - should never get here
 			throw new WorldClockException("Unexpected intent received" + intent);
 		}
 
+		//save button action
 		Button saveButton = (Button) findViewById(R.id.timezone_edit_save);
 		saveButton.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				Spinner spinner = (Spinner) findViewById(R.id.timezone_edit_spinner);
-				WorldClockTimeZone selectedZone = (WorldClockTimeZone) spinner
-						.getSelectedItem();
-
 				EditText displayName = (EditText) findViewById(R.id.timezone_edit_displayname);
-
-				intent.putExtra(WorldClockActivity.INTENT_TZ_ID_OUT, selectedZone.getId());
-				intent.putExtra(WorldClockActivity.INTENT_TZ_DISPLAYNAME_OUT, displayName.getText().toString());
-				setResult(RESULT_OK, intent);
-
-				finish();
+				
+				if(selectedTimeZone==null || displayName.getText().toString()==null || displayName.getText().toString().length()==0){
+					Toast.makeText(getApplicationContext(), R.string.error_must_pick_zone_name, Toast.LENGTH_SHORT).show();
+				}
+				else{
+					intent.putExtra(WorldClockActivity.INTENT_TZ_ID_OUT, selectedTimeZone.getId());
+					intent.putExtra(WorldClockActivity.INTENT_TZ_DISPLAYNAME_OUT, displayName.getText().toString());
+					setResult(RESULT_OK, intent);	
+					finish();
+				}
 			}
 		});
 
+		//cancel button action
 		Button buttonCancel = (Button) findViewById(R.id.timezone_edit_cancel);
 		buttonCancel.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -152,16 +127,17 @@ public class TimeZoneEdit extends Activity {
 
 	}
 	
-	@Override
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		// TODO Auto-generated method stub
-		super.onPrepareDialog(id, dialog);
-	}
-	
 	private void dialogItemSelected(WorldClockTimeZone selectedItem){
 		//update display to selected value
 		this.selectedTimeZone=selectedItem;
-		System.out.println("dialog closed"+selectedItem);
+		Button buttonTimeZoneList = (Button)findViewById(R.id.button_timezone_edit_list);
+		buttonTimeZoneList.setText(selectedItem.toString());
+		
+		//if adding zone update the custom name
+		if (Intent.ACTION_INSERT.equals(getIntent().getAction())){
+			EditText displayName = (EditText) findViewById(R.id.timezone_edit_displayname);
+			displayName.setText(selectedItem.getDisplayName());
+		}
 	}
 	
 	@Override
@@ -185,9 +161,6 @@ public class TimeZoneEdit extends Activity {
 					WorldClockTimeZone selectedItem = adapter.getItem(position);					
 					dialogItemSelected(selectedItem);
 					dismissDialog(DIALOG_TIMEZONE_LIST);
-					
-					// TODO Auto-generated method stub
-					
 				}
 			});
 		    
@@ -220,18 +193,6 @@ public class TimeZoneEdit extends Activity {
 	        throw new WorldClockException("Unknown dialog -should never happen");
 	    }
 	    return dialog;
-	}
-
-	private int getPositionForZone(String timeZoneId) {
-		List<WorldClockTimeZone> allZones = getTimeZones();
-
-		for (int i = 0; i < allZones.size(); i++) {
-			if (allZones.get(i).getId().equals(timeZoneId))
-				return i;
-		}
-
-		// not found
-		return 0;
 	}
 
 	private List<WorldClockTimeZone> getTimeZones() {
