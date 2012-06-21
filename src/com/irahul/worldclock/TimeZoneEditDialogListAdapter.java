@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,11 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 		// image icon
 		ImageView displayIcon = (ImageView) convertView
 				.findViewById(R.id.dialog_list_icon);
-		displayIcon.setImageResource(R.drawable.us);
+		//find country
+		Country tzCountry = CountryTimeZone.getCountryForTimeZoneId(tz.getId());
+		Resources res = getContext().getResources();
+		
+		displayIcon.setImageResource(res.getIdentifier(tzCountry.name().toLowerCase(), "drawable", getContext().getPackageName()));
 		// TODO
 		// image.setImageResource(R.drawable.android);
 
