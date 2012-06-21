@@ -66,6 +66,7 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 		// image icon
 		ImageView displayIcon = (ImageView) convertView
 				.findViewById(R.id.dialog_list_icon);
+		displayIcon.setImageResource(R.drawable.us);
 		// TODO
 		// image.setImageResource(R.drawable.android);
 

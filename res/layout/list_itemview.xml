@@ -27,7 +27,7 @@
         android:layout_height="fill_parent"
         android:layout_marginLeft="3dp"
         android:layout_marginRight="3dp"
-        android:src="@drawable/clock_icon" >
+        android:src="@drawable/us" >
     </ImageView>
 
     <LinearLayout
