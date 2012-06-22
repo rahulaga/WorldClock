@@ -170,7 +170,7 @@ public class WorldClockActivity extends Activity {
 			return true;
 		case R.id.menu_about:
 			//about menu
-			//TODO
+			//TODO add about dialog
 		default:
 			return super.onOptionsItemSelected(item);
 		}
