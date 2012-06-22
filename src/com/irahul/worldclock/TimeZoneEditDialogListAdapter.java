@@ -69,11 +69,8 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 		// image icon
 		Resources res = getContext().getResources();
 		ImageView displayIcon = (ImageView) convertView.findViewById(R.id.dialog_list_icon);
-		Country tzCountry = CountryTimeZone.getCountryForTimeZoneId(tz.getId());
-		//TODO - check if performance is good. Only visible list is rendered so maybe ok 
-		if(tzCountry!=null){
-			displayIcon.setImageResource(res.getIdentifier(tzCountry.name().toLowerCase(), "drawable", getContext().getPackageName()));
-		}
+		//TODO - check if performance is good. Only visible list is rendered so maybe ok
+		displayIcon.setImageResource(res.getIdentifier(tz.getFlagResourceName(), "drawable", getContext().getPackageName()));
 
 		return convertView;
 	}

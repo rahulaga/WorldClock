@@ -223,7 +223,7 @@ public class CountryTimeZone {
 		tzCountryMap.put("Africa/Djibouti", Country.DJ);
 		tzCountryMap.put("Europe/Copenhagen", Country.DK);
 		tzCountryMap.put("America/Dominica", Country.DM);
-		tzCountryMap.put("America/Santo_Domingo", Country.DX);
+		tzCountryMap.put("America/Santo_Domingo", Country.DO);
 		tzCountryMap.put("Africa/Algiers", Country.DZ);
 		tzCountryMap.put("America/Guayaquil", Country.EC);
 		tzCountryMap.put("Pacific/Galapagos", Country.EC);

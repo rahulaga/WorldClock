@@ -62,11 +62,8 @@ public class TimeZoneListAdapter extends ArrayAdapter<WorldClockTimeZone> {
 		//image
 		Resources res = getContext().getResources();
 		ImageView displayIcon = (ImageView) convertView.findViewById(R.id.list_icon);
-		Country tzCountry = CountryTimeZone.getCountryForTimeZoneId(tz.getId());
 		//TODO - check if performance is good. Only visible list is rendered so maybe ok 
-		if(tzCountry!=null){
-			displayIcon.setImageResource(res.getIdentifier(tzCountry.name().toLowerCase(), "drawable", getContext().getPackageName()));
-		}
+		displayIcon.setImageResource(res.getIdentifier(tz.getFlagResourceName(), "drawable", getContext().getPackageName()));	
 		
 		return convertView;
 	}

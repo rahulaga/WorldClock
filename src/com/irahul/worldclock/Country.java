@@ -84,7 +84,7 @@ public enum Country {
 	DJ,
 	DK,
 	DM,
-	DX,//HACK this should be DO - cant have a resource named as a reserved word!
+	DO,
 	DZ,
 	EC,
 	EE,

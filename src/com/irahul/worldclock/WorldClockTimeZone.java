@@ -99,4 +99,20 @@ public class WorldClockTimeZone {
 	public String getDefaultDisplay() {
 		return this.timeZone.getID()+" ("+this.getDisplayName()+")";
 	}
+	
+	/**
+	 * Get country mapped to this time zone
+	 * @return
+	 */
+	public Country getMappedCountry(){
+		return CountryTimeZone.getCountryForTimeZoneId(getId());
+	}
+	
+	/**
+	 * Return the resource name for the drawable flag
+	 * @return
+	 */
+	public String getFlagResourceName(){
+		return new StringBuilder("flag_").append(getMappedCountry().name().toLowerCase()).toString();
+	}
 }
