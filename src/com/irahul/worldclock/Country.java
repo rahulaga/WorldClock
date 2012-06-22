@@ -22,6 +22,8 @@ package com.irahul.worldclock;
  *
  */
 public enum Country {
+	XX,//Not a country 
+	
 	AD,
 	AE,
 	AF,
@@ -29,7 +31,6 @@ public enum Country {
 	AI,
 	AL,
 	AM,
-	AN,
 	AO,
 	AQ,
 	AR,
@@ -83,7 +84,7 @@ public enum Country {
 	DJ,
 	DK,
 	DM,
-	DO,
+	DX,//HACK this should be DO - cant have a resource named as a reserved word!
 	DZ,
 	EC,
 	EE,
@@ -230,6 +231,7 @@ public enum Country {
 	SN,
 	SO,
 	SR,
+	SS,
 	ST,
 	SV,
 	SX,

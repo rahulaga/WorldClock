@@ -19,10 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 /**
  * Custom view for list
@@ -56,6 +58,15 @@ public class TimeZoneListAdapter extends ArrayAdapter<WorldClockTimeZone> {
 		
 		TextView displayName = (TextView)convertView.findViewById(R.id.list_display_label);
 		displayName.setText(tz.getDisplayName());
+		
+		//image
+		Resources res = getContext().getResources();
+		ImageView displayIcon = (ImageView) convertView.findViewById(R.id.list_icon);
+		Country tzCountry = CountryTimeZone.getCountryForTimeZoneId(tz.getId());
+		//TODO - check if performance is good. Only visible list is rendered so maybe ok 
+		if(tzCountry!=null){
+			displayIcon.setImageResource(res.getIdentifier(tzCountry.name().toLowerCase(), "drawable", getContext().getPackageName()));
+		}
 		
 		return convertView;
 	}

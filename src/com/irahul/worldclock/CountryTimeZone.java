@@ -17,20 +17,22 @@ package com.irahul.worldclock;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 /**
  * Timezone to Country mapping
  * Generated from ICU4J http://site.icu-project.org/
+ * 
+ * NOTE - this is a subset of all {@link java.util.TimeZone#getAvailableIDs()}
+ * Excluding random ones like SystemV
  * 
  * @author rahul
  *
  */
 public class CountryTimeZone {
 
-	private static Map<String, Country> tzCountryMap;
+	private static Map<String, Country> tzCountryMap = new HashMap<String, Country>();
 	
-	static{
-		tzCountryMap = new HashMap<String, Country>();
-		
+	static{		
 		tzCountryMap.put("Europe/Andorra", Country.AD);
 		tzCountryMap.put("Asia/Dubai", Country.AE);
 		tzCountryMap.put("Asia/Kabul", Country.AF);
@@ -221,7 +223,7 @@ public class CountryTimeZone {
 		tzCountryMap.put("Africa/Djibouti", Country.DJ);
 		tzCountryMap.put("Europe/Copenhagen", Country.DK);
 		tzCountryMap.put("America/Dominica", Country.DM);
-		tzCountryMap.put("America/Santo_Domingo", Country.DO);
+		tzCountryMap.put("America/Santo_Domingo", Country.DX);
 		tzCountryMap.put("Africa/Algiers", Country.DZ);
 		tzCountryMap.put("America/Guayaquil", Country.EC);
 		tzCountryMap.put("Pacific/Galapagos", Country.EC);
@@ -574,17 +576,45 @@ public class CountryTimeZone {
 		tzCountryMap.put("Africa/Johannesburg", Country.ZA);
 		tzCountryMap.put("Africa/Lusaka", Country.ZM);
 		tzCountryMap.put("Africa/Harare", Country.ZW);
-		tzCountryMap.put("CAT", Country.ZW);
+		tzCountryMap.put("CAT", Country.ZW);		
+		
+		//non-country specific - assigning major country
+		tzCountryMap.put("Etc/GMT+12", Country.XX);
+		tzCountryMap.put("Etc/GMT+11", Country.XX);
+		tzCountryMap.put("Etc/GMT+10", Country.XX);
+		tzCountryMap.put("Etc/GMT+9", Country.XX);
+		tzCountryMap.put("Etc/GMT+8", Country.XX);
+		tzCountryMap.put("Etc/GMT+7", Country.XX);
+		tzCountryMap.put("Etc/GMT+6", Country.XX);
+		tzCountryMap.put("Etc/GMT+5", Country.XX);
+		tzCountryMap.put("Etc/GMT+4", Country.XX);
+		tzCountryMap.put("Etc/GMT+3", Country.XX);
+		tzCountryMap.put("Etc/GMT+2", Country.XX);
+		tzCountryMap.put("Etc/GMT+1", Country.XX);
+		tzCountryMap.put("Etc/GMT", Country.XX);
+		tzCountryMap.put("Etc/GMT+0", Country.XX);
+		tzCountryMap.put("Etc/GMT-0", Country.XX);
+		tzCountryMap.put("Etc/GMT-1", Country.XX);
+		tzCountryMap.put("Etc/GMT-2", Country.XX);
+		tzCountryMap.put("Etc/GMT-3", Country.XX);
+		tzCountryMap.put("Etc/GMT-4", Country.XX);
+		tzCountryMap.put("Etc/GMT-5", Country.XX);
+		tzCountryMap.put("Etc/GMT-6", Country.XX);
+		tzCountryMap.put("Etc/GMT-7", Country.XX);
+		tzCountryMap.put("Etc/GMT-8", Country.XX);
+		tzCountryMap.put("Etc/GMT-9", Country.XX);
+		tzCountryMap.put("Etc/GMT-10", Country.XX);
+		tzCountryMap.put("Etc/GMT-11", Country.XX);
+		tzCountryMap.put("Etc/GMT-12", Country.XX);
+		tzCountryMap.put("Etc/GMT-13", Country.XX);
+		tzCountryMap.put("Etc/GMT-14", Country.XX);
 	}
 	
 	public static Country getCountryForTimeZoneId(String timezoneId){
-		if(tzCountryMap.containsKey(timezoneId)){
-			return tzCountryMap.get(timezoneId);
-		}
-		else{
-			//not found
-			System.out.println("Not found:"+timezoneId);
-			return Country.US;
-		}
+		return tzCountryMap.get(timezoneId);
+	}
+	
+	public static Set<String> getSupportedTimezoneIds(){
+		return tzCountryMap.keySet();
 	}
 }

@@ -26,8 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:layout_marginLeft="3dp"
-        android:layout_marginRight="3dp"
-        android:src="@drawable/us" >
+        android:layout_marginRight="3dp" >
     </ImageView>
 
     <LinearLayout

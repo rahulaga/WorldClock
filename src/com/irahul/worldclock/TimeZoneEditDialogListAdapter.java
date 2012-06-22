@@ -27,7 +27,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+/**
+ * List adapter for the selection dialog
+ * @author rahul
+ *
+ */
 public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZone> {
 	private List<WorldClockTimeZone> originalDataValues;
 	private List<WorldClockTimeZone> filteredDataValues;
@@ -55,25 +59,21 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 		WorldClockTimeZone tz = filteredDataValues.get(position);
 
 		// display label
-		TextView displayLabel = (TextView) convertView
-				.findViewById(R.id.dialog_list_display_label);
+		TextView displayLabel = (TextView) convertView.findViewById(R.id.dialog_list_display_label);
 		displayLabel.setText(tz.getId());
 
 		// offset
-		TextView displayOffset = (TextView) convertView
-				.findViewById(R.id.dialog_list_offset_label);
+		TextView displayOffset = (TextView) convertView.findViewById(R.id.dialog_list_offset_label);
 		displayOffset.setText(tz.getRawOffsetDisplay());
 
 		// image icon
-		ImageView displayIcon = (ImageView) convertView
-				.findViewById(R.id.dialog_list_icon);
-		//find country
-		Country tzCountry = CountryTimeZone.getCountryForTimeZoneId(tz.getId());
 		Resources res = getContext().getResources();
-		
-		displayIcon.setImageResource(res.getIdentifier(tzCountry.name().toLowerCase(), "drawable", getContext().getPackageName()));
-		// TODO
-		// image.setImageResource(R.drawable.android);
+		ImageView displayIcon = (ImageView) convertView.findViewById(R.id.dialog_list_icon);
+		Country tzCountry = CountryTimeZone.getCountryForTimeZoneId(tz.getId());
+		//TODO - check if performance is good. Only visible list is rendered so maybe ok 
+		if(tzCountry!=null){
+			displayIcon.setImageResource(res.getIdentifier(tzCountry.name().toLowerCase(), "drawable", getContext().getPackageName()));
+		}
 
 		return convertView;
 	}
