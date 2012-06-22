@@ -39,7 +39,7 @@ public class TimeZoneListAdapter extends ArrayAdapter<WorldClockTimeZone> {
 	private WorldClockTimeZone[] displayTimeZones;
 	
 	public TimeZoneListAdapter(Context context, WorldClockTimeZone[] tzValues) {
-		super(context, R.layout.list_itemview, R.id.list_display_label, tzValues);		
+		super(context, R.layout.worldclock_main_list_item, R.id.list_display_label, tzValues);		
 		this.displayTimeZones=tzValues;
 	}
 	
@@ -48,7 +48,7 @@ public class TimeZoneListAdapter extends ArrayAdapter<WorldClockTimeZone> {
 	public View getView(int position, View convertView, ViewGroup parent) {		
 		if(convertView==null){
 			LayoutInflater li = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = li.inflate(R.layout.list_itemview, null);
+			convertView = li.inflate(R.layout.worldclock_main_list_item, null);
 		}
 		
 		WorldClockTimeZone tz = displayTimeZones[position];			

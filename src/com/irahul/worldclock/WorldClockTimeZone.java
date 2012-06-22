@@ -84,11 +84,11 @@ public class WorldClockTimeZone {
 	}
 
 	/**
-	 * The string that is searched in the add dialog box (using ID + display name) - and lowercased
+	 * The string that is searched in the add dialog box (using ID + display name + offset) - and lowercased
 	 * Replacing the underscore with space as well for better search. eg: its new_york as zone id
 	 * @return
 	 */
 	public String getSearchString() {
-		return new StringBuilder(this.timeZone.getID()).append(" ").append(this.getDisplayName()).toString().toLowerCase().replace("_", " ");
+		return new StringBuilder(this.timeZone.getID()).append(this.getDisplayName()).append(this.getRawOffsetDisplay()).toString().toLowerCase().replace("_", " ");
 	}
 }

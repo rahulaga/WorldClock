@@ -36,7 +36,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/dialog_list_display_label"
+            android:id="@+id/dialog_list_display_line1"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"
@@ -45,7 +45,7 @@
         </TextView>
         
         <TextView
-            android:id="@+id/dialog_list_offset_label"
+            android:id="@+id/dialog_list_display_line2"
             android:layout_width="fill_parent"
             android:layout_height="0dip"
             android:layout_weight="1"

@@ -38,7 +38,7 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 	private Filter filter = null;
 
 	public TimeZoneEditDialogListAdapter(Context context, List<WorldClockTimeZone> tzValues) {
-		super(context, R.layout.timezone_edit_dialog_list, R.id.dialog_list_display_label, tzValues);
+		super(context, R.layout.timezone_edit_dialog_list, R.id.dialog_list_display_line1, tzValues);
 
 		//original values
 		this.originalDataValues = new ArrayList<WorldClockTimeZone>(tzValues);
@@ -59,12 +59,12 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 		WorldClockTimeZone tz = filteredDataValues.get(position);
 
 		// display label
-		TextView displayLabel = (TextView) convertView.findViewById(R.id.dialog_list_display_label);
-		displayLabel.setText(tz.getId());
+		TextView displayLabel = (TextView) convertView.findViewById(R.id.dialog_list_display_line1);
+		displayLabel.setText(tz.getId()+" "+tz.getRawOffsetDisplay());
 
 		// offset
-		TextView displayOffset = (TextView) convertView.findViewById(R.id.dialog_list_offset_label);
-		displayOffset.setText(tz.getRawOffsetDisplay());
+		TextView displayOffset = (TextView) convertView.findViewById(R.id.dialog_list_display_line2);
+		displayOffset.setText(tz.getDisplayName());
 
 		// image icon
 		Resources res = getContext().getResources();
