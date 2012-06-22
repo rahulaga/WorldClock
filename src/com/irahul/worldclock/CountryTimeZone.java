@@ -15,9 +15,12 @@
  */
 package com.irahul.worldclock;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 /**
  * Timezone to Country mapping
  * Generated from ICU4J http://site.icu-project.org/
@@ -31,6 +34,7 @@ import java.util.Set;
 public class CountryTimeZone {
 
 	private static Map<String, Country> tzCountryMap = new HashMap<String, Country>();
+	private static List<WorldClockTimeZone> allTimeZones = null;
 	
 	static{		
 		tzCountryMap.put("Europe/Andorra", Country.AD);
@@ -614,7 +618,15 @@ public class CountryTimeZone {
 		return tzCountryMap.get(timezoneId);
 	}
 	
-	public static Set<String> getSupportedTimezoneIds(){
-		return tzCountryMap.keySet();
+	public static synchronized List<WorldClockTimeZone> getSupportedTimezones(){
+		if(allTimeZones==null){
+			Set<String> supportedZones = tzCountryMap.keySet();
+			allTimeZones = new ArrayList<WorldClockTimeZone>(supportedZones.size());
+			for (String tz : supportedZones) {
+				allTimeZones.add(new WorldClockTimeZone(TimeZone.getTimeZone(tz)));
+			}
+		}
+		
+		return allTimeZones;
 	}
 }

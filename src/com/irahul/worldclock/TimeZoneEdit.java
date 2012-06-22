@@ -15,8 +15,6 @@
  */
 package com.irahul.worldclock;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 import android.app.Activity;
@@ -50,7 +48,7 @@ public class TimeZoneEdit extends Activity {
 	private static final String TAG = TimeZoneEdit.class.getName();
 	private static final int DIALOG_TIMEZONE_LIST = 0;
 	
-	private WorldClockTimeZone selectedTimeZone = null;
+	private WorldClockTimeZone selectedTimeZone = null;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +148,7 @@ public class TimeZoneEdit extends Activity {
 			
 			//setup list with timezone and enable filtering
 			ListView dialogList = (ListView)dialogView.findViewById(R.id.dialog_list_view);
-			final ArrayAdapter<WorldClockTimeZone> adapter = new TimeZoneEditDialogListAdapter(this, getTimeZones());			
+			final ArrayAdapter<WorldClockTimeZone> adapter = new TimeZoneEditDialogListAdapter(this, CountryTimeZone.getSupportedTimezones());			
 			dialogList.setAdapter(adapter);			
 			dialogList.setTextFilterEnabled(true);
 			dialogList.setFastScrollEnabled(true);
@@ -193,15 +191,5 @@ public class TimeZoneEdit extends Activity {
 	        throw new WorldClockException("Unknown dialog -should never happen");
 	    }
 	    return dialog;
-	}
-
-	private List<WorldClockTimeZone> getTimeZones() {
-		String[] timezoneIds = TimeZone.getAvailableIDs();
-		List<WorldClockTimeZone> tzList = new ArrayList<WorldClockTimeZone>(timezoneIds.length);
-		for (String id : timezoneIds) {
-			tzList.add(new WorldClockTimeZone(TimeZone.getTimeZone(id)));
-		}
-
-		return tzList;
 	}
 }
