@@ -91,4 +91,12 @@ public class WorldClockTimeZone {
 	public String getSearchString() {
 		return new StringBuilder(this.timeZone.getID()).append(this.getDisplayName()).append(this.getRawOffsetDisplay()).toString().toLowerCase().replace("_", " ");
 	}
+	
+	/**
+	 * Default display string
+	 * @return
+	 */
+	public String getDefaultDisplay() {
+		return this.timeZone.getID()+" ("+this.getDisplayName()+")";
+	}
 }

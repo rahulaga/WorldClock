@@ -81,7 +81,7 @@ public class TimeZoneEdit extends Activity {
 			
 			//pre-select timezone
 			this.selectedTimeZone = new WorldClockTimeZone(TimeZone.getTimeZone(intent.getStringExtra(WorldClockActivity.INTENT_TZ_ID_IN)));
-			buttonTimeZoneList.setText(this.selectedTimeZone.toString());			
+			buttonTimeZoneList.setText(this.selectedTimeZone.getDefaultDisplay());			
 
 			// pre-select displayname
 			EditText displayName = (EditText) findViewById(R.id.timezone_edit_displayname);
@@ -131,12 +131,12 @@ public class TimeZoneEdit extends Activity {
 		//update display to selected value
 		this.selectedTimeZone=selectedItem;
 		Button buttonTimeZoneList = (Button)findViewById(R.id.button_timezone_edit_list);
-		buttonTimeZoneList.setText(selectedItem.toString());
+		buttonTimeZoneList.setText(selectedItem.getDefaultDisplay());
 		
-		//if adding zone update the custom name
+		//if adding zone update the custom name with default
 		if (Intent.ACTION_INSERT.equals(getIntent().getAction())){
 			EditText displayName = (EditText) findViewById(R.id.timezone_edit_displayname);
-			displayName.setText(selectedItem.getDisplayName());
+			displayName.setText(selectedItem.getDefaultDisplay());
 		}
 	}
 	
