@@ -112,7 +112,7 @@ public class WorldClockTimeZone {
 	 * Return the resource name for the drawable flag
 	 * @return
 	 */
-	public String getFlagResourceName(){
-		return new StringBuilder("flag_").append(getMappedCountry().name().toLowerCase()).toString();
+	public String getFlagResourceName(){		
+		return new StringBuilder("flag_").append(getMappedCountry().name().toLowerCase()).toString();		
 	}
 }

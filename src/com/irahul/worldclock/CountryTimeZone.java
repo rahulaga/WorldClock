@@ -16,6 +16,8 @@
 package com.irahul.worldclock;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -615,7 +617,11 @@ public class CountryTimeZone {
 	}
 	
 	public static Country getCountryForTimeZoneId(String timezoneId){
-		return tzCountryMap.get(timezoneId);
+		if(tzCountryMap.containsKey(timezoneId)){
+			return tzCountryMap.get(timezoneId);
+		}
+		//not found
+		return Country.XX;
 	}
 	
 	public static synchronized List<WorldClockTimeZone> getSupportedTimezones(){
@@ -625,7 +631,13 @@ public class CountryTimeZone {
 			for (String tz : supportedZones) {
 				allTimeZones.add(new WorldClockTimeZone(TimeZone.getTimeZone(tz)));
 			}
-		}
+			
+			Collections.sort(allTimeZones, new Comparator<WorldClockTimeZone>() {
+				public int compare(WorldClockTimeZone lhs, WorldClockTimeZone rhs) {
+					return lhs.getId().compareTo(rhs.getId());
+				}
+			});
+		}		
 		
 		return allTimeZones;
 	}
