@@ -18,8 +18,12 @@ package com.irahul.worldclock;
 import java.util.TimeZone;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -31,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * Main world clock activity
@@ -39,7 +44,7 @@ import android.widget.ListView;
  * 
  */
 public class WorldClockActivity extends Activity {	
-	private static final String TAG = WorldClockActivity.class.getName();
+	private static final String TAG = WorldClockActivity.class.getName();	
 	//
 	//Intent extras map keys
 	//IN - sent to edit dialog
@@ -170,12 +175,29 @@ public class WorldClockActivity extends Activity {
 			return true;
 		case R.id.menu_about:
 			//about menu
-			//TODO add about dialog
+			showAboutDialog();						
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 	
+	private void showAboutDialog() {
+		SpannableString aboutMessage = new SpannableString(getText(R.string.about_message));
+	    Linkify.addLinks(aboutMessage, Linkify.WEB_URLS);
+		
+	    AlertDialog dialog = new AlertDialog.Builder(this)
+			.setPositiveButton(android.R.string.ok, null)
+			.setTitle(R.string.about_title)
+			.setCancelable(true)
+			.setMessage(aboutMessage)
+			.create();
+		
+		dialog.show();
+	
+		// Make the textview clickable. Must be called after show()
+		((TextView)dialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+	}
+
 	private void invokeAddZoneActivity() {
 		startActivityForResult(new Intent(Intent.ACTION_INSERT), REQ_CODE_ADD_ZONE);
 	}

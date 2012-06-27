@@ -14,7 +14,10 @@
     <string name="timezone_pick_name">Custom name</string>
     <string name="timezone_save">Save</string>
     <string name="timezone_cancel">Cancel</string>
-    <string name="timezone_search_filter">Type name to search...</string>   
+    <string name="timezone_search_filter">Type to narrow search...</string>   
     <string name="error_must_pick_zone_name">Please select a timezone and custom name</string>
-
+    
+    <!-- About dialog -->	
+    <string name="about_title">AndroidOpenSourceApps.org</string>
+	<string name="about_message">This app is free software. Please visit <a href="http://androidopensourceapps.org">AndroidOpenSourceApps.org</a> to find more details and consider a donation.</string>
 </resources>
