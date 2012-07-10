@@ -23,9 +23,6 @@
 
     <uses-sdk android:minSdkVersion="10" />
     
-    <!-- Permission to save selections -->
-    <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-
     <!-- Clock image from http://openclipart.org/detail/12597/analog-clock-by-anonymous-12597 -->
     <application
         android:icon="@drawable/clock_icon"
