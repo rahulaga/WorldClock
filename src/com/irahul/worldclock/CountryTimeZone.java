@@ -38,7 +38,6 @@ import java.util.TimeZone;
 public class CountryTimeZone {
 
 	private static Map<String, Country> tzCountryMap = new HashMap<String, Country>();
-	private static List<WorldClockTimeZone> allTimeZones = null;
 	
 	static{		
 		tzCountryMap.put("Europe/Andorra", Country.AD);
@@ -627,19 +626,18 @@ public class CountryTimeZone {
 	}
 	
 	public static synchronized List<WorldClockTimeZone> getSupportedTimezones(){
-		if(allTimeZones==null){
-			Set<String> supportedZones = tzCountryMap.keySet();
-			allTimeZones = new ArrayList<WorldClockTimeZone>(supportedZones.size());
-			for (String tz : supportedZones) {
-				allTimeZones.add(new WorldClockTimeZone(TimeZone.getTimeZone(tz)));
+		List<WorldClockTimeZone> allTimeZones = new ArrayList<WorldClockTimeZone>();		
+		Set<String> supportedZones = tzCountryMap.keySet();
+		allTimeZones = new ArrayList<WorldClockTimeZone>(supportedZones.size());
+		for (String tz : supportedZones) {
+			allTimeZones.add(new WorldClockTimeZone(TimeZone.getTimeZone(tz)));
+		}
+		
+		Collections.sort(allTimeZones, new Comparator<WorldClockTimeZone>() {
+			public int compare(WorldClockTimeZone lhs, WorldClockTimeZone rhs) {
+				return lhs.getId().compareTo(rhs.getId());
 			}
-			
-			Collections.sort(allTimeZones, new Comparator<WorldClockTimeZone>() {
-				public int compare(WorldClockTimeZone lhs, WorldClockTimeZone rhs) {
-					return lhs.getId().compareTo(rhs.getId());
-				}
-			});
-		}		
+		});
 		
 		return allTimeZones;
 	}

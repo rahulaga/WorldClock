@@ -31,6 +31,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 /**
  * List adapter for the selection dialog
+ * 
+ * Based on original source code - take a look at it otherwise won't make sense
+ * https://github.com/android/platform_frameworks_base/blob/master/core/java/android/widget/ArrayAdapter.java#L449
+ * 
+ * Also guidance from: http://software-workshop.eu/content/android-development-creating-custom-filter-listview
  * @author rahul
  *
  */
@@ -38,7 +43,7 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 	private List<WorldClockTimeZone> originalDataValues;
 	private List<WorldClockTimeZone> filteredDataValues;
 	private Filter filter = null;
-
+	
 	public TimeZoneEditDialogListAdapter(Context context, List<WorldClockTimeZone> tzValues) {
 		super(context, R.layout.timezone_edit_dialog_list, R.id.dialog_list_display_line1, tzValues);
 
@@ -58,7 +63,7 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 					null);
 		}
 
-		WorldClockTimeZone tz = filteredDataValues.get(position);
+		WorldClockTimeZone tz = getItem(position);//from underlying mObjects array		
 
 		// display label
 		TextView displayLabel = (TextView) convertView.findViewById(R.id.dialog_list_display_line1);
@@ -87,9 +92,6 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 
 	/**
 	 * Implement filtering on list for searchText
-	 * Based on original source code from:
-	 * https://github.com/android/platform_frameworks_base/blob/master/core/java/android/widget/ArrayAdapter.java#L449
-	 * http://software-workshop.eu/content/android-development-creating-custom-filter-listview
 	 * @author rahul
 	 *
 	 */
@@ -132,13 +134,13 @@ public class TimeZoneEditDialogListAdapter extends ArrayAdapter<WorldClockTimeZo
 		@Override
 		protected void publishResults(CharSequence constraint, FilterResults results) {
 			filteredDataValues = (List<WorldClockTimeZone>) results.values;
-			
-			notifyDataSetChanged();
-            clear();
+						
+            clear();//clear underlying mObjects array
             for(int i = 0; i < filteredDataValues.size(); i++){
+            	//add to underlying mObjects array
                 add(filteredDataValues.get(i));
             }
-            notifyDataSetInvalidated();            
+            notifyDataSetChanged();                       
 		}
 	}
 
