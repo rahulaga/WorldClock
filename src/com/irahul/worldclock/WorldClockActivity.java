@@ -21,6 +21,7 @@ import java.util.TimeZone;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -88,7 +89,7 @@ public class WorldClockActivity extends Activity {
 		
 		//if no data exists then prompt to add
 		if(listSize==0){
-			startActivityForResult(new Intent(Intent.ACTION_INSERT), REQ_CODE_ADD_ZONE);
+			invokeAddZoneActivity();
 		}
 	}
 
@@ -116,7 +117,8 @@ public class WorldClockActivity extends Activity {
 			// edit
 			Intent editIntent = new Intent(Intent.ACTION_EDIT);
 			editIntent.putExtra(INTENT_TZ_ID_IN, selectedTimeZone.getId());
-			editIntent.putExtra(INTENT_TZ_DISPLAYNAME_IN, selectedTimeZone.getDisplayName());						
+			editIntent.putExtra(INTENT_TZ_DISPLAYNAME_IN, selectedTimeZone.getDisplayName());
+			editIntent.setComponent(new ComponentName(this, TimeZoneEdit.class));
 			startActivityForResult(editIntent, REQ_CODE_EDIT_ZONE);
 			return true;
 		case R.id.menu_delete:
@@ -201,7 +203,9 @@ public class WorldClockActivity extends Activity {
 	}
 
 	private void invokeAddZoneActivity() {
-		startActivityForResult(new Intent(Intent.ACTION_INSERT), REQ_CODE_ADD_ZONE);
+		Intent intent = new Intent(Intent.ACTION_INSERT);
+		intent.setComponent(new ComponentName(this, TimeZoneEdit.class));
+		startActivityForResult(intent, REQ_CODE_ADD_ZONE);
 	}
 	
 	/**
